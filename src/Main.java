@@ -3,22 +3,20 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         Basket basket = new Basket(new String[]{"Хлеб", "Булочка", "Пряник"}, new int[]{25, 30, 12});
-        File file = new File("basket.txt");
-
+        File file = new File("basket.bin");
         if (file.exists()) {
-            basket = Basket.loadFromTxtFile(file);
+            basket = Basket.loadFromBinFile(file);
             basket.addToCart(basket.getProductNum(), basket.getAmount());
-            basket.saveTxt(file);
+            basket.saveBin(file);
             basket.printCart();
+
         } else {
             basket.addToCart(basket.getProductNum(), basket.getAmount());
-            basket.saveTxt(file);
             basket.printCart();
-
+            basket.saveBin(file);
         }
-
     }
 }

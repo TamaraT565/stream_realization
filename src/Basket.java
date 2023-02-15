@@ -67,39 +67,26 @@ public class Basket {
         System.out.println("Итого " + sumProducts + "руб.");
     }
 
-    public void saveTxt(File textFile) throws IOException {
-        try (PrintWriter writer = new PrintWriter(textFile)) {
-            for (int i = 0; i < products.length; i++) {
-                writer.println(products[i] + "\t" + prices[i] + "\t" + amounts[i] + "\t" + productSum[i]);
-            }
+    public void saveBin(File file) {
+        Basket basket = new Basket();
+        try (FileOutputStream fos = new FileOutputStream(file);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(this);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
-    public static Basket loadFromTxtFile(File textFile) throws IOException {
-        String[] products;
-        int[] prices;
-        int[] amounts;
-        int[] productSum;
-        try (Scanner scanner = new Scanner(new FileInputStream(textFile))) {
-            int size = Integer.parseInt(scanner.nextLine());
-            products = new String[size];
-            prices = new int[size];
-            amounts = new int[size];
-            productSum = new int[size];
-            for (int i = 0; i < size; i++) {
-                String inputString2 = scanner.nextLine();
-                String[] parts = inputString2.split("\t");
-                products[i] = parts[0];
-                prices[i] = Integer.parseInt(parts[1]);
-                amounts[i] = Integer.parseInt(parts[2]);
-                productSum[i] = prices[i] * amounts[i];
-            }
+    static Basket loadFromBinFile(File file) {
+        Basket basket = null;
+
+        try (FileInputStream fis = new FileInputStream(file);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            basket = (Basket) ois.readObject();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
-        Basket basket = new Basket();
-        basket.products = products;
-        basket.prices = prices;
-        basket.amounts = amounts;
-        basket.productSum = productSum;
+
         return basket;
     }
 }
